@@ -1,0 +1,40 @@
+---
+- hosts: localhost
+  become: yes
+  become_method: sudo
+  vars:
+    # sequence: 80,443,22
+    sequence_open: 7000,8000,9000
+    sequence_close: 9000,8000,7000
+    # Sequence to open/close port.
+    seq_timeout: 25
+    # Number of seconds sequence must be completed in.
+    cmd_timeout: 120
+    # Number of seconds before runing the closing command.
+    command_open: ufw allow from %IP% to any port 22 proto tcp 
+    command_close: ufw delete allow from %IP% to any port 22 proto tcp 
+    # Commands to open/close port.
+    interface: wlan0
+    # Interface to listen, default is hardcoded eth0.
+  tasks:
+
+  - name: Installing Tor and knockd
+    apt: name={{ item }} state=present
+    with_items:
+     - tor
+     - knockd
+     - ufw
+  
+  - name: Default deny inbound traffic
+    ufw: state=enabled policy=deny
+
+  - name: Configure Knockd
+    template: src=knockd.conf.j2 dest=/etc/knockd.conf
+  - name: Enable Knockd
+    lineinfile: dest=/etc/default/knockd regexp="START_KNOCKD=0" line="START_KNOCKD=1"
+    notify:
+      - restart knockd
+    
+  handlers:
+    - name: Restart knockd
+      service: name=knockd state=restarted

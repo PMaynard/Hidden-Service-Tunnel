@@ -1,0 +1,17 @@
+[options]
+	UseSyslog
+	Interface = {{ interface }}
+
+[openSSH]
+	sequence    = {{ sequence_open }}
+	seq_timeout = {{ seq_timeout }}
+	command     = {{ command_open }}
+	tcpflags    = syn
+	cmd_timeout = {{ cmd_timeout }}
+
+[closeSSH]
+	sequence    = {{ sequence_close }}
+	seq_timeout = {{ seq_timeout }}
+	command     = {{ command_close }}
+	tcpflags    = syn
+

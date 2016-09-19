@@ -3,7 +3,6 @@
   become: yes
   become_method: sudo
   vars:
-    # sequence: 80,443,22
     sequence_open: 7000,8000,9000
     sequence_close: 9000,8000,7000
     # Sequence to open/close port.
@@ -16,6 +15,9 @@
     command_open: ufw allow in on {{ interface }} from %IP% to any port 22 proto tcp 
     command_close: ufw delete allow in on {{ interface }} from %IP% to any port 22 proto tcp 
     # Commands to open/close port.
+    auth: client-secrect
+    port_tor: 22
+    port_local: 22
   tasks:
   - name: Installing Tor and knockd
     apt: name={{ item }} state=present

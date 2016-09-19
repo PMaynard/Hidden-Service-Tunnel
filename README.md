@@ -1,4 +1,4 @@
-# Hidden Servier Tunnel with port knocking
+# Hidden Service Tunnel with port knocking
 
 This script will configure two services Tor, and Knockd.
 
